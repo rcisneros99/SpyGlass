@@ -95,16 +95,18 @@ class IntelligenceApp:
             # Get query embedding
             query_embedding = get_embedding(query)
             
-            # Find most relevant documents
+            # Find most relevant documents using cosine similarity
             similarities = []
             for filename, doc_embedding in embeddings.items():
-                similarity = np.dot(query_embedding, doc_embedding) / (
-                    np.linalg.norm(query_embedding) * np.linalg.norm(doc_embedding)
-                )
+                # Calculate cosine similarity
+                dot_product = np.dot(query_embedding, doc_embedding)
+                query_norm = np.sqrt(np.dot(query_embedding, query_embedding))
+                doc_norm = np.sqrt(np.dot(doc_embedding, doc_embedding))
+                similarity = dot_product / (query_norm * doc_norm)
                 similarities.append((similarity, filename))
             
-            # Get top 3 most similar documents
-            top_docs = sorted(similarities, reverse=True)[:3]
+            # Get top 10 most similar documents
+            top_docs = sorted(similarities, reverse=True)[:10]  # Changed from 3 to 10
             
             if top_docs:
                 relevant_texts = []
@@ -123,8 +125,10 @@ class IntelligenceApp:
                 response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": """You are an intelligence analyst for Ukraine analyzing intercepted Russian communications.
-                        Your task is to:
+                        {"role": "system", "content": """You are an intelligence analyst for Ukraine analyzing intercepted Russian communications found in their own networks.
+                        Your task is to answer to questions from the user based on the intercepted communications.
+                         
+                        Guidelines:
                         1. Carefully analyze each message for threats, plans, intentions, details, or concerning information
                         2. Look for specific details about operations, movements, or strategic intentions
                         3. Consider both explicit and implicit threats
@@ -137,9 +141,9 @@ class IntelligenceApp:
 Intercepted Communications:
 {combined_text}
 
-Analyze these intercepted Russian communications and provide a detailed assessment focusing on the question."""}
+Analyze these intercepted Russian communications and provide a concise assessment focusing on the question."""}
                     ],
-                    temperature=0.7,
+                    temperature=0.5,
                     max_tokens=500
                 )
                 answer = response.choices[0].message.content
@@ -196,7 +200,7 @@ def main():
     
     # Main Chat Panel (Load this first)
     with main_panel:
-        st.header("Intelligence Chat")
+        st.header("Intelligence Chat 💬")
         
         # Handle chat input first
         if prompt := st.chat_input("Ask a question about the intelligence"):
@@ -281,7 +285,7 @@ def main():
     with side_panel:
         # File uploader section
         with st.container():
-            st.header("Upload Audio Files")
+            st.header("Upload Audio Files 🔊")
             uploaded_file = st.file_uploader("Choose an audio file", type=['mp3', 'wav'])
             
             if uploaded_file:
@@ -296,18 +300,21 @@ def main():
         st.markdown("---")
         critical_container = st.container()
         with critical_container:
-            st.header("Critical Intel")
+            st.header("Critical Intel 🚨🚨🚨")
             
             # Load critical intel
             try:
                 if len(st.session_state.important_messages) == 0:
                     with st.spinner("Loading critical intelligence..."):
-                        response = app.query_documents("""Identify the most critical Russian communications that contain:
+                        response = app.query_documents("""You are an intelligence analyst for Ukraine analyzing intercepted Russian communications within their own networks.
+                                                       
+                        You must identify the 10 most critical Russian communications (in context of Ukraine's war effort) that contain:
                         1. Specific military plans or operations
                         2. Important locations or movements
                         3. Strategic decisions or intentions
                         4. Time-sensitive information
                         5. Potential threats or vulnerabilities
+                        6. Specific details about equipment, munitions, or other resources                               
 
                         Focus on messages that contain concrete details about operations, locations, or plans.
                         Ignore general chatter or non-actionable information.""")
