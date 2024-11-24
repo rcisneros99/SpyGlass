@@ -3,6 +3,8 @@ from pyht import Client
 from pyht.client import TTSOptions, Language
 from dotenv import load_dotenv
 import os
+import soundfile
+import numpy as np
 
 # Load environment variables
 load_dotenv('.env.local')
@@ -49,7 +51,7 @@ Counter-message intention: {intent}"""
              Your response must have:
              - The translated message
              - No additional text, analysis, or explanation
-             - It must be in a way that people would actually say it in real life, not like a formal letter or something.
+             - It must be in a way that people would actually say it in real life, include pauses, filler words, etc. not like a formal letter or something.
              """
              },
             {"role": "user", "content": counter_msg_english}
@@ -84,10 +86,42 @@ Counter-message intention: {intent}"""
     )
 
     try:
-        with open("output_ukrainian.mp3", "wb") as f:
-            for chunk in client_pyth.tts(translated_counter_msg, options):
+        # First generate clean audio
+        clean_audio_chunks = []
+        for chunk in client_pyth.tts(translated_counter_msg, options):
+            clean_audio_chunks.append(chunk)
+        
+        with open("output_ukrainian_clean.mp3", "wb") as f:
+            for chunk in clean_audio_chunks:
                 f.write(chunk)
+        # Read the clean audio and add noise
+        audio_data, sample_rate = soundfile.read("output_ukrainian_clean.mp3")
+        
+        # Generate stronger noise
+        noise = np.random.normal(0, 0.05, len(audio_data))  # Increased noise amplitude
+        
+        # Add some static/crackle effects
+        static = np.random.uniform(-0.02, 0.02, len(audio_data))
+        
+        # Add some frequency modulation
+        t = np.linspace(0, len(audio_data)/sample_rate, len(audio_data))
+        modulation = 0.02 * np.sin(2 * np.pi * 2 * t)  # 2 Hz modulation
+        
+        # Combine all effects
+        noisy_audio = audio_data + noise + static + modulation
+        
+        # Add some random dropouts
+        dropout_mask = np.random.random(len(audio_data)) > 0.01  # 1% chance of dropout
+        noisy_audio = noisy_audio * dropout_mask
+        
+        # Clip to prevent distortion
+        noisy_audio = np.clip(noisy_audio, -1, 1)
+        
+        # Save the noisy audio
+        soundfile.write('output_ukrainian.mp3', noisy_audio, sample_rate)
         print("Audio saved to output_ukrainian.mp3")
+
+
     except Exception as e:
         print(f"An error occurred generating Ukrainian audio: {e}")
 
