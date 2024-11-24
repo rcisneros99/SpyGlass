@@ -1,0 +1,21 @@
+{
+  "node": {
+    "5c03a39722c6a8bd66fbffea9229c7e6add85f55": {
+      "workers": {
+        "app/page": "(actionBrowser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Frcisneros%2Fexperiments%2Fhornethack%2Fapp%2Factions%2FuploadAudio.ts%22%2C%5B%22uploadAudio%22%5D%5D%2C%5B%22%2FUsers%2Frcisneros%2Fexperiments%2Fhornethack%2Fapp%2Factions%2FsearchRAG.ts%22%2C%5B%22searchRAG%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/page": "actionBrowser"
+      }
+    },
+    "9ac7f2184e88b50493cbd9e30382e1f4d8b93b45": {
+      "workers": {
+        "app/page": "(actionBrowser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Frcisneros%2Fexperiments%2Fhornethack%2Fapp%2Factions%2FuploadAudio.ts%22%2C%5B%22uploadAudio%22%5D%5D%2C%5B%22%2FUsers%2Frcisneros%2Fexperiments%2Fhornethack%2Fapp%2Factions%2FsearchRAG.ts%22%2C%5B%22searchRAG%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/page": "actionBrowser"
+      }
+    }
+  },
+  "edge": {}
+}
