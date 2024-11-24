@@ -14,7 +14,7 @@ SpyGlass is an intelligence analysis system that processes intercepted audio com
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/spyglass.git
+git clone https://github.com/racisneros99/hornethack.git
 cd spyglass
 ```
 
@@ -41,7 +41,7 @@ OPENAI_BASE_URL=https://api.omnistack.sh/openai/v1
 ## Project Structure
 
 ```
-spyglass/
+hornethack/
 ├── data/
 │   ├── uploads/      # Place audio files here
 │   └── transcripts/  # Generated transcripts and embeddings

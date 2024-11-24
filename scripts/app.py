@@ -271,15 +271,11 @@ def main():
                             st.markdown(f"🎯 Intention: {st.session_state.counter_messages[message_id]['intention']}")
                             st.markdown(f"🇺🇸 English: {st.session_state.counter_messages[message_id]['english']}")
                             st.markdown(f"🇺🇦 Ukrainian: {st.session_state.counter_messages[message_id]['ukrainian']}")
-                            
                             st.subheader("Audio Files:")
-                            col1, col2 = st.columns(2)
-                            with col1:
-                                st.markdown("🇺🇸 English:")
-                                display_audio_file("output_english.mp3", "mp3")
-                            with col2:
-                                st.markdown("🇺🇦 Ukrainian:")
-                                display_audio_file("output_ukrainian.mp3", "mp3")
+                            st.markdown("🇺🇸 English:")
+                            display_audio_file("output_english.mp3", "mp3")
+                            st.markdown("🇺🇦 Ukrainian:")
+                            display_audio_file("output_ukrainian.mp3", "mp3")
 
     # Side Panel
     with side_panel:
